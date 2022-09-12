@@ -82,7 +82,7 @@ void rotl_f(stack_t **doubly, unsigned int cline);
 void rotr_f(stack_t **doubly, unsigned int cline);
 
 /*get function*/
-void (*get_functions(char *opcd))(stack_t **stack, unsigned int line_number);
+void (*get_functions(char *opc))(stack_t **stack, unsigned int line_number);
 
 /*imported functions*/
 int _sch(char *s, char c);

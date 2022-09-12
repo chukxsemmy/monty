@@ -1,38 +1,39 @@
 #include "monty.h"
 
 /**
- * get_functions - selects the correct opcode to perform
- * @opcd: opcode passed
+ * get_opcodes - selects the correct opcode to perform
+ *
+ * @opc: opcode passed
+ *
  * Return: pointer to the function that executes the opcode
  */
-
-void (*get_functions(char *opcd))(stack_t **stack, unsigned int line_number)
+void (*get_opcodes(char *opc))(stack_t **stack, unsigned int line_number)
 {
 	instruction_t instruct[] = {
-		{"push", push_f},
-		{"pall", pall_f},
-		{"pint", pint_f},
-		{"pop", pop_f},
-		{"swap", swap_f},
-		{"queue", queue_f},
-		{"stack", stack_f},
-		{"add", add_f},
-		{"nop", nop_f},
-		{"sub", sub_f},
-		{"mul", mul_f},
-		{"div", div_f},
-		{"mod", mod_f},
-		{"pchar", pchar_f},
-		{"pstr", pstr_f},
-		{"rotl", rotl_f},
-		{"rotr", rotr_f},
+		{"push", _push},
+		{"pall", _pall},
+		{"pint", _pint},
+		{"pop", _pop},
+		{"swap", _swap},
+		{"queue", _queue},
+		{"stack", _stack},
+		{"add", _add},
+		{"nop", _nop},
+		{"sub", _sub},
+		{"mul", _mul},
+		{"div", _div},
+		{"mod", _mod},
+		{"pchar", _pchar},
+		{"pstr", _pstr},
+		{"rotl", _rotl},
+		{"rotr", _rotr},
 		{NULL, NULL}
 	};
 	int i;
 
 	for (i = 0; instruct[i].opcode; i++)
 	{
-		if (_strcmp(instruct[i].opcode, opcd) == 0)
+		if (_strcmp(instruct[i].opcode, opc) == 0)
 			break;
 	}
 
