@@ -1,133 +1,135 @@
 #include "monty.h"
 
 /**
- * push_f - pushes an element to the stack
- * @doubly: head of the linked list
- * @cline: line number
- * Return: no return
+ * push - Add node to the stack
+ * @stack: head of linkedlist
+ * @line_number: line number of the instruction
+ *
+ * Return: No return
  */
-
-void push_f(stack_t **doubly, unsigned int cline)
+void push(stack_t **stack, unsigned int line_number)
 {
-	int n, j;
 
-	if (!vglo.arg)
+	int n = 0;
+
+	if (globalvar.token2 == NULL)
 	{
-		dprintf(2, "L%u: ", cline);
-		dprintf(2, "usage: push integer\n");
-		free_vglo();
-		exit(EXIT_FAILURE);
+		free_dlistint(*stack);
+		stderr_int(line_number);
 	}
-
-	for (j = 0; vglo.arg[j] != '\0'; j++)
+	if (!_isdigit() || stack == NULL)
 	{
-		if (!isdigit(vglo.arg[j]) && vglo.arg[j] != '-')
-		{
-			dprintf(2, "L%u: ", cline);
-			dprintf(2, "usage: push integer\n");
-			free_vglo();
-			exit(EXIT_FAILURE);
-		}
+		free_dlistint(*stack);
+		stderr_int(line_number);
 	}
-
-	n = atoi(vglo.arg);
-
-	if (vglo.lifo == 1)
-		add_dnodeint(doubly, n);
+	n = atoi(globalvar.token2);
+	if (*stack  == NULL)
+	{
+		create_node_stackfirst(stack, n);
+	}
 	else
-		add_dnodeint_end(doubly, n);
-}
-
-/**
- * pall_f - prints all values on the stack
- * @doubly: head of the linked list
- * @cline: line numbers
- * Return: no return
- */
-void pall_f(stack_t **doubly, unsigned int cline)
-{
-	stack_t *aux;
-	(void)cline;
-
-	aux = *doubly;
-
-	while (aux)
 	{
-		printf("%d\n", aux->n);
-		aux = aux->next;
+		create_node_stackend(stack, n);
 	}
 }
 
 /**
- * pint_f - prints the value at the top of the stack
- * @doubly: head of the linked list
- * @cline: line number
- * Return: no return
+ * pall - Print the stack
+ * @stack: head of linkedlist
+ * @line_number: line number of the instruction
+ *
+ * Return: No return
  */
-void _pint(stack_t **doubly, unsigned int cline)
+void pall(stack_t **stack, unsigned int line_number)
 {
-	(void)cline;
 
-	if (*doubly == NULL)
+	stack_t *temp = NULL;
+
+
+	if (*stack == NULL)
 	{
-		dprintf(2, "L%u: ", cline);
-		dprintf(2, "can't pint, stack empty\n");
-		free_vglo();
-		exit(EXIT_FAILURE);
+		return;
 	}
+	if (*stack == NULL && line_number != 1)
+	{
+		free_dlistint(*stack);
+		free_globalvars();
+		exit(EXIT_SUCCESS);
+	}
+	temp = *stack;
+	while (temp->next != NULL)
+		temp = temp->next;
+	while (temp->prev != NULL)
+	{
+		printf("%d", temp->n);
+		temp = temp->prev;
+		printf("\n");
+	}
+	printf("%d\n", temp->n);
+}
 
-	printf("%d\n", (*doubly)->n);
+
+/**
+ * pint - Print the stack
+ * @stack: head of linkedlist
+ * @line_number: line number of the instruction
+ *
+ * Return: No return
+ */
+void pint(stack_t **stack, unsigned int line_number)
+{
+
+	stack_t *temp = NULL;
+
+	if (stack == NULL || *stack == NULL)
+	{
+		pint_e(line_number);
+		return;
+	}
+	temp = *stack;
+	while (temp->next != NULL)
+		temp = temp->next;
+
+	printf("%d", temp->n);
+	printf("\n");
 }
 
 /**
- * pop_f - removes the top element of the stack
- * @doubly: head of the linked list
- * @cline: line number
- * Return: no return
+ * swap - Print the stack
+ * @stack: head of linkedlist
+ * @line_number: line number of the instruction
+ *
+ * Return: No return
  */
-
-void pop_f(stack_t **doubly, unsigned int cline)
+void swap(stack_t **stack, unsigned int line_number)
 {
-	stack_t *aux;
+	stack_t *temp;
+	int i, j;
 
-	if (doubly == NULL || *doubly == NULL)
+	if (*stack == NULL || stack == NULL)
+		op_e(line_number, "swap");
+
+	temp = (*stack)->next;
+	if ((*stack)->next == NULL)
+		op_e(line_number, "swap");
+	while (temp->next != NULL)
 	{
-		dprintf(2, "L%u: can't pop an empty stack\n", cline);
-		free_vglo();
-		exit(EXIT_FAILURE);
+		temp = temp->next;
 	}
-	aux = *doubly;
-	*doubly = (*doubly)->next;
-	free(aux);
+	i = temp->n;
+	j = temp->prev->n;
+	temp->n = j;
+	temp->prev->n = i;
 }
-
 /**
- * swap_f - swaps the top two elements of the stack
- * @doubly: head of the linked list
- * @cline: line number
- * Return: no return
+ * nop - does not do anything
+ * @stack: head of linkedlist
+ * @line_number: line number of the instruction
+ *
+ * Return: No return
  */
-void swap_f(stack_t **doubly, unsigned int cline)
+void nop(stack_t **stack, unsigned int line_number)
 {
-	int m = 0;
-	stack_t *aux = NULL;
-
-	aux = *doubly;
-
-	for (; aux != NULL; aux = aux->next, m++)
-		;
-
-	if (m < 2)
-	{
-		dprintf(2, "L%u: can't swap, stack too short\n", cline);
-		free_vglo();
-		exit(EXIT_FAILURE);
-	}
-
-	aux = *doubly;
-	*doubly = (*doubly)->next;
-	aux->next = (*doubly)->next;
-	aux->prev = *doubly;
-	(*doubly)->next = aux;
-	(*doubly)->prev = NULL;
+	(void)stack;
+	(void)line_number;
 }
